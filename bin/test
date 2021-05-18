@@ -1,0 +1,7 @@
+#!/usr/bin/env ruby
+Signal.trap("EXIT") do
+  system("docker-compose down")
+end
+
+system("docker-compose up -d")
+system("rake test")

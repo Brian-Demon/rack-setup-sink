@@ -1,0 +1,15 @@
+#!/usr/bin/env ruby
+
+system("docker-compose up -d")
+
+require "bundler/setup"
+$: << File.expand_path(File.join(__dir__, "..", "lib"))
+require "setup_sink"
+require "thin"
+
+app = Rack::Builder.new do |builder|
+  builder.use Rack::Session::Pool
+  builder.run SetupSink::App.new(host: "localhost", port: 6379)
+end.to_app
+  
+Rack::Server.start(app: app, port: 8080)
